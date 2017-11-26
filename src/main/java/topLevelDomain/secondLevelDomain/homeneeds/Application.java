@@ -1,4 +1,4 @@
-package topLevelDomain.secondLevelDomain.homeNeeds;
+package topLevelDomain.secondLevelDomain.homeneeds;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

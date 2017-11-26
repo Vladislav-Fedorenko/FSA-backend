@@ -7,7 +7,7 @@ CREATE TABLE devices (
   updated_at TIMESTAMPTZ
 );
 
-INSERT INTO devices (name, createdAt) VALUES
+INSERT INTO devices (name, created_at) VALUES
   ('ГВ санузел', CURRENT_TIMESTAMP),
   ('ХВ санузел', CURRENT_TIMESTAMP),
   ('ГВ кухня', CURRENT_TIMESTAMP),

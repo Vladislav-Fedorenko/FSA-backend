@@ -21,11 +21,8 @@ public class Device {
   @Column(name = "updated_at")
   private Timestamp updatedAt;
 
-  @ManyToMany(cascade = CascadeType.ALL)
-  @JoinTable(name = "home_devices",
-    joinColumns = @JoinColumn(name = "devices_id"),
-    inverseJoinColumns = @JoinColumn(name = "home_info_id"))
-  private Set<HomeInfo> homeInfoSet;
+  @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
+  private Set<HomeDevice> homeDevices;
 
   public Long getId() {
     return id;
@@ -59,11 +56,11 @@ public class Device {
     this.updatedAt = updatedAt;
   }
 
-  public Set<HomeInfo> getHomeInfoSet() {
-    return homeInfoSet;
+  public Set<HomeDevice> getHomeDevices() {
+    return homeDevices;
   }
 
-  public void setHomeInfoSet(Set<HomeInfo> homeInfoSet) {
-    this.homeInfoSet = homeInfoSet;
+  public void setHomeDevices(Set<HomeDevice> homeDevices) {
+    this.homeDevices = homeDevices;
   }
 }

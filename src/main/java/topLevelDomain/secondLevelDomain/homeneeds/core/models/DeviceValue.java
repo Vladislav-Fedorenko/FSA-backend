@@ -2,27 +2,31 @@ package topLevelDomain.secondLevelDomain.homeneeds.core.models;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Set;
+import java.util.Date;
 
 @Entity
-@Table(name = "home_info")
-public class HomeInfo {
+@Table(name = "devices_values")
+public class DeviceValue {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "name")
-  private String name;
+  @ManyToOne(cascade = {CascadeType.ALL})
+  @JoinColumn(name = "home_devices_id")
+  private HomeDevice homeDevice;
+
+  @Column(name = "value")
+  private Integer value;
+
+  @Column(name = "date")
+  private Date date;
 
   @Column(name = "created_at")
   private Timestamp createdAt;
 
   @Column(name = "updated_at")
   private Timestamp updatedAt;
-
-  @OneToMany(mappedBy = "homeInfo", fetch = FetchType.LAZY)
-  private Set<HomeDevice> homeDevices;
 
   public Long getId() {
     return id;
@@ -32,12 +36,28 @@ public class HomeInfo {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public HomeDevice getHomeDevice() {
+    return homeDevice;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setHomeDevice(HomeDevice homeDevice) {
+    this.homeDevice = homeDevice;
+  }
+
+  public Integer getValue() {
+    return value;
+  }
+
+  public void setValue(Integer value) {
+    this.value = value;
+  }
+
+  public Date getDate() {
+    return date;
+  }
+
+  public void setDate(Date date) {
+    this.date = date;
   }
 
   public Timestamp getCreatedAt() {
@@ -54,13 +74,5 @@ public class HomeInfo {
 
   public void setUpdatedAt(Timestamp updatedAt) {
     this.updatedAt = updatedAt;
-  }
-
-  public Set<HomeDevice> getHomeDevices() {
-    return homeDevices;
-  }
-
-  public void setHomeDevices(Set<HomeDevice> homeDevices) {
-    this.homeDevices = homeDevices;
   }
 }

@@ -13,7 +13,6 @@ public class HomeDeviceArchive {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @OneToMany(mappedBy = "homeDevice", fetch = FetchType.LAZY)
   private Long id;
 
   @Column(name = "home_devices_id")

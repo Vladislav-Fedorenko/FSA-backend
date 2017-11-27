@@ -10,7 +10,7 @@ public class HomeDevice {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @OneToMany(mappedBy = "homeDevice", fetch = FetchType.LAZY)
+//  @OneToMany(mappedBy = "homeDevice", fetch = FetchType.LAZY)
   private Long id;
 
   @ManyToOne(cascade = {CascadeType.ALL})

@@ -1,8 +1,5 @@
 package topLevelDomain.secondLevelDomain.homeneeds.core.models.archive;
 
-import topLevelDomain.secondLevelDomain.homeneeds.core.models.Device;
-import topLevelDomain.secondLevelDomain.homeneeds.core.models.HomeInfo;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;

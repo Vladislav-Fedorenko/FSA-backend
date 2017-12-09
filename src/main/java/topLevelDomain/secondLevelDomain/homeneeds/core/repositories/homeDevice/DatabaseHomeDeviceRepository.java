@@ -22,7 +22,7 @@ public class DatabaseHomeDeviceRepository implements HomeDeviceRepository {
       insertExecutor.execute();
       return insertExecutor.getResult();
     } catch (DatabaseTasksExecutorException e) {
-      e.printStackTrace();
+      System.out.println(e.getMessage());
     }
     return null;
   }

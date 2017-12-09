@@ -2,7 +2,7 @@ package topLevelDomain.secondLevelDomain.homeneeds.core.repositories.homeDevice;
 
 import topLevelDomain.secondLevelDomain.homeneeds.core.models.HomeDevice;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.database.DatabaseTasksExecutorFactory;
-import topLevelDomain.secondLevelDomain.homeneeds.utils.database.InsertExecutor;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.database.extending.InsertExecutor;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.database.exeception.DatabaseTasksExecutorException;
 
 import java.util.List;

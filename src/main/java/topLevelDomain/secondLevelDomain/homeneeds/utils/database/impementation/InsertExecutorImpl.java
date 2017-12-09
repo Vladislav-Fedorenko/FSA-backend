@@ -3,7 +3,7 @@ package topLevelDomain.secondLevelDomain.homeneeds.utils.database.impementation;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import topLevelDomain.secondLevelDomain.homeneeds.utils.database.InsertExecutor;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.database.extending.InsertExecutor;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.database.exeception.DatabaseTasksExecutorException;
 
 public class InsertExecutorImpl<T> implements InsertExecutor<T> {

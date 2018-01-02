@@ -1,7 +1,7 @@
-package topLevelDomain.secondLevelDomain.homeneeds.utils.timestamp.extending;
+package topLevelDomain.secondLevelDomain.homeneeds.utils.entities;
 
 import topLevelDomain.secondLevelDomain.homeneeds.utils.timestamp.Creatable;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.timestamp.Updatable;
 
-public interface EntityTimestamp extends Creatable, Updatable{
+public interface IEntity extends Creatable, Updatable {
 }

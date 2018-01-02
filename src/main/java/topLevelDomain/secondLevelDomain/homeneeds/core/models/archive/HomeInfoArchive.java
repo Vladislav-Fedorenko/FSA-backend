@@ -3,9 +3,12 @@ package topLevelDomain.secondLevelDomain.homeneeds.core.models.archive;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+import topLevelDomain.secondLevelDomain.homeneeds.utils.archive.ArchivedException;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntity;
+
 @Entity
 @Table(name = "archive_home_info")
-public class HomeInfoArchive {
+public class HomeInfoArchive implements IArchiveEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +23,8 @@ public class HomeInfoArchive {
   @Column(name = "created_at")
   private Timestamp createdAt;
 
-  @Column(name = "deleted_at")
-  private Timestamp deletedAt;
+  @Column(name = "archiving_reason")
+  private String archivingReason;
 
   public Long getId() {
     return id;
@@ -55,11 +58,13 @@ public class HomeInfoArchive {
     this.createdAt = createdAt;
   }
 
-  public Timestamp getDeletedAt() {
-    return deletedAt;
+  @Override
+  public void setArchivingReason(final String archivingReason) throws ArchivedException {
+    this.archivingReason = archivingReason;
   }
 
-  public void setDeletedAt(Timestamp deletedAt) {
-    this.deletedAt = deletedAt;
+  @Override
+  public String getArchivingReason() throws ArchivedException {
+    return archivingReason;
   }
 }

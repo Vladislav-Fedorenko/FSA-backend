@@ -19,7 +19,7 @@ CREATE TABLE archive_devices (
   devices_id bigserial,
   name varchar,
   created_at TIMESTAMPTZ NOT NULL,
-  deleted_at TIMESTAMPTZ NOT NULL
+  archiving_reason varchar NOT NULL
 );
 
 -- HOME INFO
@@ -36,7 +36,7 @@ CREATE TABLE archive_home_info (
   home_info_id bigserial,
   name varchar,
   created_at TIMESTAMPTZ NOT NULL,
-  deleted_at TIMESTAMPTZ NOT NULL
+  archiving_reason varchar NOT NULL
 );
 
 -- HOME DEVICES
@@ -59,7 +59,7 @@ CREATE TABLE archive_home_devices (
   number varchar,
   verification_date DATE,
   created_at TIMESTAMPTZ NOT NULL,
-  deleted_at TIMESTAMPTZ NOT NULL
+  archiving_reason varchar NOT NULL
 );
 
 -- DEVICES VALUES
@@ -79,5 +79,5 @@ CREATE TABLE archive_devices_values (
   value INTEGER,
   date DATE,
   created_at TIMESTAMPTZ NOT NULL,
-  deleted_at TIMESTAMPTZ NOT NULL
+  archiving_reason varchar NOT NULL
 );

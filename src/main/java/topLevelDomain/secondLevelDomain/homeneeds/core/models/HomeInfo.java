@@ -1,12 +1,14 @@
 package topLevelDomain.secondLevelDomain.homeneeds.core.models;
 
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IEntity;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
 @Table(name = "home_info")
-public class HomeInfo {
+public class HomeInfo implements IEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,9 +4,11 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IEntity;
+
 @Entity
 @Table(name = "devices_values")
-public class DeviceValue {
+public class DeviceValue implements IEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,9 +4,12 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import topLevelDomain.secondLevelDomain.homeneeds.utils.archive.ArchivedException;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntity;
+
 @Entity
 @Table(name = "archive_devices_values")
-public class DeviceValueArchive {
+public class DeviceValueArchive implements IArchiveEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -23,8 +26,8 @@ public class DeviceValueArchive {
   @Column(name = "created_at")
   private Timestamp createdAt;
 
-  @Column(name = "deleted_at")
-  private Timestamp deletedAt;
+  @Column(name = "archiving_reason")
+  private String archivingReason;
 
   public Long getId() {
     return id;
@@ -66,11 +69,13 @@ public class DeviceValueArchive {
     this.createdAt = createdAt;
   }
 
-  public Timestamp getDeletedAt() {
-    return deletedAt;
+  @Override
+  public void setArchivingReason(final String archivingReason) throws ArchivedException {
+    this.archivingReason = archivingReason;
   }
 
-  public void setDeletedAt(Timestamp deletedAt) {
-    this.deletedAt = deletedAt;
+  @Override
+  public String getArchivingReason() throws ArchivedException {
+    return archivingReason;
   }
 }

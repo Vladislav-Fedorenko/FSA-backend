@@ -2,15 +2,16 @@ package topLevelDomain.secondLevelDomain.homeneeds.core.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import topLevelDomain.secondLevelDomain.homeneeds.utils.timestamp.extending.EntityTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
 
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IEntity;
+
 @Entity
 @Table(name = "devices")
-public class Device implements EntityTimestamp {
+public class Device implements IEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

@@ -40,6 +40,8 @@ public class Device implements IEntity {
     }
   }
 
+  public Device() {}
+
   public Long getId() {
     return id;
   }

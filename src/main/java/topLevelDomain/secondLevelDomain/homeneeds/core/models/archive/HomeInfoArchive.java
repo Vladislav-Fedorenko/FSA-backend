@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 
 import topLevelDomain.secondLevelDomain.homeneeds.utils.archive.ArchivedException;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntity;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntityException;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IEntity;
 
 @Entity
 @Table(name = "archive_home_info")
@@ -66,5 +68,10 @@ public class HomeInfoArchive implements IArchiveEntity {
   @Override
   public String getArchivingReason() throws ArchivedException {
     return archivingReason;
+  }
+
+  @Override
+  public void setValuesOfFieldsFromEntity(IEntity entity) throws IArchiveEntityException {
+
   }
 }

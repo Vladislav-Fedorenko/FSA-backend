@@ -3,8 +3,11 @@ package topLevelDomain.secondLevelDomain.homeneeds.core.models.archive;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+import topLevelDomain.secondLevelDomain.homeneeds.core.models.Device;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntity;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.archive.ArchivedException;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntityException;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IEntity;
 
 @Entity
 @Table(name = "archive_devices")
@@ -24,6 +27,8 @@ public class DeviceArchive implements IArchiveEntity {
 
   @Column(name = "archiving_reason")
   private String archivingReason;
+
+  public DeviceArchive() {}
 
   public Long getId() {
     return id;
@@ -59,11 +64,30 @@ public class DeviceArchive implements IArchiveEntity {
 
   @Override
   public void setArchivingReason(final String archivingReason) throws ArchivedException {
-    this.archivingReason = archivingReason;
+    try {
+      this.archivingReason = archivingReason;
+    } catch (Exception e) {
+      throw new ArchivedException("", e);
+    }
   }
 
   @Override
   public String getArchivingReason() throws ArchivedException {
-    return archivingReason;
+    try {
+      return archivingReason;
+    } catch (Exception e) {
+      throw new ArchivedException("", e);
+    }
+  }
+
+  @Override
+  public void setValuesOfFieldsFromEntity(final IEntity entity) throws IArchiveEntityException{
+    try {
+      Device device = (Device) entity;
+      this.deviceId = device.getId();
+      this.name = device.getName();
+    } catch (Exception e) {
+      throw new IArchiveEntityException("", e);
+    }
   }
 }

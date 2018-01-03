@@ -6,6 +6,8 @@ import java.util.Date;
 
 import topLevelDomain.secondLevelDomain.homeneeds.utils.archive.ArchivedException;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntity;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntityException;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IEntity;
 
 @Entity
 @Table(name = "archive_devices_values")
@@ -77,5 +79,10 @@ public class DeviceValueArchive implements IArchiveEntity {
   @Override
   public String getArchivingReason() throws ArchivedException {
     return archivingReason;
+  }
+
+  @Override
+  public void setValuesOfFieldsFromEntity(IEntity entity) throws IArchiveEntityException {
+
   }
 }

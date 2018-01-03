@@ -2,16 +2,17 @@ package topLevelDomain.secondLevelDomain.homeneeds.utils.database.impementation;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import topLevelDomain.secondLevelDomain.homeneeds.utils.database.extending.InsertExecutor;
-import topLevelDomain.secondLevelDomain.homeneeds.utils.database.exeception.DatabaseTasksExecutorException;
-import topLevelDomain.secondLevelDomain.homeneeds.utils.timestamp.extending.EntityTimestamp;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 
-public class InsertExecutorImpl<T extends EntityTimestamp> implements InsertExecutor<T> {
+import topLevelDomain.secondLevelDomain.homeneeds.utils.database.extending.InsertExecutor;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.database.exeception.DatabaseTasksExecutorException;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IEntity;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.timestamp.TimestampException;
+
+public class InsertExecutorImpl<T extends IEntity> implements InsertExecutor<T> {
   private SessionFactory sessionFactory;
-  private T insertingObject;
+  private T insertedObject;
   private T resultInserting;
 
   public InsertExecutorImpl(SessionFactory sessionFactory) {
@@ -21,27 +22,37 @@ public class InsertExecutorImpl<T extends EntityTimestamp> implements InsertExec
   @Override
   public void execute() throws DatabaseTasksExecutorException {
     try {
-      Timestamp timestamp = Timestamp.from(Instant.now());
-      insertingObject.setCreatedAt(timestamp);
-      insertingObject.setUpdatedAt(timestamp);
-
-      Session session = sessionFactory.openSession();
-      session.beginTransaction();
-      session.save(insertingObject);
-      session.getTransaction().commit();
-
-      insertingObject.setCreatedAt(timestamp);
-      insertingObject.setUpdatedAt(timestamp);
-      this.resultInserting = this.insertingObject;
+      Timestamp timestamp = getTimestamp();
+      insert(insertedObject, timestamp);
+      resultInserting = insertedObject;
+    } catch (TimestampException e) {
+      throw new DatabaseTasksExecutorException("timestamp", e);
     } catch (Exception e) {
       throw new DatabaseTasksExecutorException("", e);
     }
   }
 
+  private Timestamp getTimestamp() {
+    return Timestamp.from(Instant.now());
+  }
+
+  private void insert(final T insertedObject, final Timestamp timestamp) throws TimestampException {
+    insertedObject.setCreatedAt(timestamp);
+    insertedObject.setUpdatedAt(timestamp);
+    writeObjectToDatabase(insertedObject);
+  }
+
+  private void writeObjectToDatabase(final Object object) {
+    Session session = sessionFactory.openSession();
+    session.beginTransaction();
+    session.save(object);
+    session.getTransaction().commit();
+  }
+
   @Override
-  public void setInsertingObject(T insertingObject) throws DatabaseTasksExecutorException {
-   try{
-     this.insertingObject = insertingObject;
+  public void setInsertedObject(T insertedObject) throws DatabaseTasksExecutorException {
+   try {
+     this.insertedObject = insertedObject;
    } catch (Exception e) {
      throw new DatabaseTasksExecutorException("", e);
    }
@@ -49,6 +60,10 @@ public class InsertExecutorImpl<T extends EntityTimestamp> implements InsertExec
 
   @Override
   public T getResult() throws DatabaseTasksExecutorException {
-    return this.resultInserting;
+    try {
+      return this.resultInserting;
+    } catch (Exception e) {
+      throw new DatabaseTasksExecutorException("", e);
+    }
   }
 }

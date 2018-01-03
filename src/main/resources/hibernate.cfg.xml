@@ -12,6 +12,7 @@
         <property name="show_sql">true</property>
 
         <mapping class="topLevelDomain.secondLevelDomain.homeneeds.core.models.Device"/>
+        <mapping class="topLevelDomain.secondLevelDomain.homeneeds.core.models.archive.DeviceArchive"/>
         <mapping class="topLevelDomain.secondLevelDomain.homeneeds.core.models.DeviceValue"/>
         <mapping class="topLevelDomain.secondLevelDomain.homeneeds.core.models.HomeDevice"/>
         <mapping class="topLevelDomain.secondLevelDomain.homeneeds.core.models.HomeInfo"/>

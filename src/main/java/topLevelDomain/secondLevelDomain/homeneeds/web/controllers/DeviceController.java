@@ -31,4 +31,14 @@ public class DeviceController {
       .build().toUri();
     return ResponseEntity.created(location).body(createdDevice);
   }
+
+  @RequestMapping(method = RequestMethod.PUT)
+  @ResponseBody
+  public ResponseEntity<Device> update(@RequestBody Device newDevice) {
+    Device createdDevice = deviceRepository.updateDevice(newDevice);
+    URI location = UriComponentsBuilder.fromPath("/device/")
+      .path(String.valueOf(createdDevice.getId()))
+      .build().toUri();
+    return ResponseEntity.created(location).body(createdDevice);
+  }
 }

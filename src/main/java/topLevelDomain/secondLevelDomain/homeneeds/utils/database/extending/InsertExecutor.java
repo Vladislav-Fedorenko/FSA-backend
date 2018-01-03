@@ -5,6 +5,6 @@ import topLevelDomain.secondLevelDomain.homeneeds.utils.database.exeception.Data
 
 public interface InsertExecutor<T> extends DatabaseTasksExecutor {
 
-  void setInsertingObject(final T insertingObject) throws DatabaseTasksExecutorException;
+  void setInsertedObject(final T insertedObject) throws DatabaseTasksExecutorException;
   T getResult() throws DatabaseTasksExecutorException;
 }

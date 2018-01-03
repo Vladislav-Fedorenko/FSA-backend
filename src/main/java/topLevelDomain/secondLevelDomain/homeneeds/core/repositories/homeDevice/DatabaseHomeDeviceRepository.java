@@ -18,7 +18,7 @@ public class DatabaseHomeDeviceRepository implements HomeDeviceRepository {
   @Override
   public HomeDevice addNewHomeDevice(HomeDevice homeDevice) {
     try {
-      insertExecutor.setInsertingObject(homeDevice);
+      insertExecutor.setInsertedObject(homeDevice);
       insertExecutor.execute();
       return insertExecutor.getResult();
     } catch (DatabaseTasksExecutorException e) {

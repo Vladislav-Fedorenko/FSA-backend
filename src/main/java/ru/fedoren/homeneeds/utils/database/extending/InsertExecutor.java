@@ -6,5 +6,6 @@ import ru.fedoren.homeneeds.utils.database.exeception.DatabaseTasksExecutorExcep
 public interface InsertExecutor<T> extends DatabaseTasksExecutor {
 
   void setInsertedObject(final T insertedObject) throws DatabaseTasksExecutorException;
+
   T getResult() throws DatabaseTasksExecutorException;
 }

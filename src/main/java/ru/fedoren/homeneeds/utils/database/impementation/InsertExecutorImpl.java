@@ -1,34 +1,46 @@
 package ru.fedoren.homeneeds.utils.database.impementation;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import java.sql.Timestamp;
 import java.time.Instant;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
-import ru.fedoren.homeneeds.utils.database.extending.InsertExecutor;
 import ru.fedoren.homeneeds.utils.database.exeception.DatabaseTasksExecutorException;
+import ru.fedoren.homeneeds.utils.database.extending.InsertExecutor;
 import ru.fedoren.homeneeds.utils.entities.IEntity;
 import ru.fedoren.homeneeds.utils.timestamp.TimestampException;
 
 public class InsertExecutorImpl<T extends IEntity> implements InsertExecutor<T> {
+
   private SessionFactory sessionFactory;
+  private Session session;
+
   private T insertedObject;
   private T resultInserting;
 
-  public InsertExecutorImpl(SessionFactory sessionFactory) {
+  public InsertExecutorImpl(final SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
   }
 
   @Override
   public void execute() throws DatabaseTasksExecutorException {
     try {
+      session = sessionFactory.openSession();
+      session.beginTransaction();
+
       Timestamp timestamp = getTimestamp();
-      insert(insertedObject, timestamp);
+      prepareObjectToInsert(insertedObject, timestamp);
+      session.save(insertedObject);
+      session.getTransaction().commit();
+
       resultInserting = insertedObject;
-    } catch (TimestampException e) {
-      throw new DatabaseTasksExecutorException("timestamp", e);
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("", e);
+    } catch (TimestampException exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed inserting. Errors of setting timestamp of creating/updating to archive_entity",
+        exp
+      );
+    } finally {
+      session.close();
     }
   }
 
@@ -36,34 +48,33 @@ public class InsertExecutorImpl<T extends IEntity> implements InsertExecutor<T> 
     return Timestamp.from(Instant.now());
   }
 
-  private void insert(final T insertedObject, final Timestamp timestamp) throws TimestampException {
+  private void prepareObjectToInsert(final T insertedObject, final Timestamp timestamp)
+      throws TimestampException {
     insertedObject.setCreatedAt(timestamp);
     insertedObject.setUpdatedAt(timestamp);
-    writeObjectToDatabase(insertedObject);
-  }
-
-  private void writeObjectToDatabase(final Object object) {
-    Session session = sessionFactory.openSession();
-    session.beginTransaction();
-    session.save(object);
-    session.getTransaction().commit();
   }
 
   @Override
-  public void setInsertedObject(T insertedObject) throws DatabaseTasksExecutorException {
-   try {
-     this.insertedObject = insertedObject;
-   } catch (Exception e) {
-     throw new DatabaseTasksExecutorException("", e);
-   }
+  public void setInsertedObject(final T insertedObject) throws DatabaseTasksExecutorException {
+    try {
+      this.insertedObject = insertedObject;
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of setting inserted object",
+        exp
+      );
+    }
   }
 
   @Override
   public T getResult() throws DatabaseTasksExecutorException {
     try {
       return this.resultInserting;
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("", e);
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of getting inserting's result",
+        exp
+      );
     }
   }
 }

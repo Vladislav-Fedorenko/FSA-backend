@@ -1,0 +1,1 @@
+package ru.fedoren.homeneeds.core.repositories;

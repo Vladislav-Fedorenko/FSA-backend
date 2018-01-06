@@ -4,6 +4,7 @@ import topLevelDomain.secondLevelDomain.homeneeds.core.models.Device;
 import topLevelDomain.secondLevelDomain.homeneeds.core.models.archive.DeviceArchive;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.database.DatabaseTasksExecutorFactory;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.database.exeception.DatabaseTasksExecutorException;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.database.extending.DeleteExecutor;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.database.extending.InsertExecutor;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.database.extending.UpdateExecutor;
 
@@ -12,11 +13,13 @@ import java.util.List;
 public class DatabaseDeviceRepository implements DeviceRepository {
   private InsertExecutor<Device> insertExecutor;
   private UpdateExecutor<Device, DeviceArchive> updateExecutor;
+  private DeleteExecutor<Device, DeviceArchive> deleteExecutor;
 
   @SuppressWarnings("unchecked")
   public DatabaseDeviceRepository(final DatabaseTasksExecutorFactory factory) {
     this.insertExecutor = factory.getInsertExecutor();
     this.updateExecutor = factory.getUpdateExecutor();
+    this.deleteExecutor = factory.getDeleteExecutor();
   }
 
   @Override
@@ -58,6 +61,15 @@ public class DatabaseDeviceRepository implements DeviceRepository {
 
   @Override
   public boolean deleteDevice(Long deviceId) {
+    try {
+      deleteExecutor.setId(deviceId);
+      deleteExecutor.setClassOfDeletedObject(Device.class);
+      deleteExecutor.setArchivedObject(new DeviceArchive());
+      deleteExecutor.execute();
+      return deleteExecutor.getResult();
+    } catch (DatabaseTasksExecutorException e) {
+      e.printStackTrace();
+    }
     return false;
   }
 }

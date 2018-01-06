@@ -7,20 +7,22 @@ import java.time.Instant;
 
 import topLevelDomain.secondLevelDomain.homeneeds.utils.archive.ArchivedException;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.database.exeception.DatabaseTasksExecutorException;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntityException;
+import topLevelDomain.secondLevelDomain.homeneeds.utils.timestamp.TimestampException;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.database.extending.UpdateExecutor;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntity;
-import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IArchiveEntityException;
 import topLevelDomain.secondLevelDomain.homeneeds.utils.entities.IEntity;
-import topLevelDomain.secondLevelDomain.homeneeds.utils.timestamp.TimestampException;
 
 
 public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchiveEntity>
   implements UpdateExecutor<T, U> {
 
   private SessionFactory sessionFactory;
+  private Session session;
+
   private T updatedObject;
   private U archivedObject;
-  private Class classOfUpdatedObject;
+  private Class<T> classOfUpdatedObject;
   private Long idOfUpdatedObject;
   private T resultOfUpdating;
 
@@ -31,18 +33,35 @@ public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
   @Override
   public void execute() throws DatabaseTasksExecutorException {
     try {
+      session = sessionFactory.openSession();
+      session.beginTransaction();
+
       Timestamp timestamp = getTimestamp();
-      archive(getUpdatedObjectFromDatabase(), timestamp);
-      update(updatedObject, timestamp);
-      resultOfUpdating = updatedObject;
-    } catch (IArchiveEntityException e) {
-      throw new DatabaseTasksExecutorException("i archive", e);
-    } catch (ArchivedException e) {
-      throw new DatabaseTasksExecutorException("archive", e);
-    } catch (TimestampException e) {
-      throw new DatabaseTasksExecutorException("timestamp", e);
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException(" ", e);
+      prepareObjectToArchive(getUpdatedObjectFromDatabase(), timestamp);
+      session.save(archivedObject);
+      prepareObjectToUpdate(updatedObject, timestamp);
+      session.merge(updatedObject);
+      session.getTransaction().commit();
+      session.evict(updatedObject);
+
+      resultOfUpdating = getUpdatedObjectFromDatabase();
+    } catch (IArchiveEntityException iArchiveEntityException) {
+      throw new DatabaseTasksExecutorException(
+        "Failed updating. Errors of setting values of fields from entity to archive_entity",
+        iArchiveEntityException
+      );
+    } catch (ArchivedException archivedException) {
+      throw new DatabaseTasksExecutorException(
+        "Failed updating. Errors of setting timestamp of creating to archive_entity",
+        archivedException
+      );
+    } catch (TimestampException timestampException) {
+      throw new DatabaseTasksExecutorException(
+        "Failed updating. Errors of setting reason of archiving to archive_entity",
+        timestampException
+      );
+    } finally {
+      session.close();
     }
   }
 
@@ -51,48 +70,47 @@ public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
   }
 
   private T getUpdatedObjectFromDatabase() {
-    Session session = sessionFactory.openSession();
-    return (T) session.get(classOfUpdatedObject, idOfUpdatedObject);
+    return session.get(classOfUpdatedObject, idOfUpdatedObject);
   }
 
-  private void archive(final T existingObject, final Timestamp timestamp)
-    throws IArchiveEntityException, TimestampException, ArchivedException {
+  private void prepareObjectToArchive(final T objectFromDatabase, final Timestamp timestamp)
+    throws IArchiveEntityException, TimestampException, ArchivedException, DatabaseTasksExecutorException {
 
-    archivedObject.setValuesOfFieldsFromEntity(existingObject);
+    if(objectFromDatabase == null) {
+      throw new DatabaseTasksExecutorException(
+        "Failed updating. Object with id = " + idOfUpdatedObject + " not found in database"
+      );
+    }
+    archivedObject.setValuesOfFieldsFromEntity(objectFromDatabase);
     archivedObject.setCreatedAt(timestamp);
-    // TODO: replace string "update" to ENUM
     archivedObject.setArchivingReason("update");
-    writeObjectToDatabase(archivedObject);
   }
 
-  private void update(final T updatedObject, final Timestamp timestamp) throws TimestampException {
+  private void prepareObjectToUpdate(final T updatedObject, final Timestamp timestamp) throws TimestampException {
     updatedObject.setUpdatedAt(timestamp);
-    writeObjectToDatabase(updatedObject);
-  }
-
-//  TODO: change on two methods 1) save to archive collection 2) update in exist collection
-  private void writeObjectToDatabase(final Object object) {
-    Session session = sessionFactory.openSession();
-    session.beginTransaction();
-    session.saveOrUpdate(object);
-    session.getTransaction().commit();
   }
 
   @Override
-  public void setId(Long id) throws DatabaseTasksExecutorException {
+  public void setId(final Long id) throws DatabaseTasksExecutorException {
     try {
       this.idOfUpdatedObject = id;
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("", e);
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of setting updated object's id",
+        exp
+      );
     }
   }
 
   @Override
-  public void setUpdatedObject(T updatedObject) throws DatabaseTasksExecutorException {
+  public void setUpdatedObject(final T updatedObject) throws DatabaseTasksExecutorException {
     try {
       this.updatedObject = updatedObject;
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("", e);
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of setting updated object",
+        exp
+      );
     }
   }
 
@@ -100,17 +118,23 @@ public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
   public void setArchivedObject(U archivedObject) throws DatabaseTasksExecutorException {
     try {
       this.archivedObject = archivedObject;
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("", e);
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of setting archived object",
+        exp
+      );
     }
   }
 
   @Override
-  public void setClassOfUpdatedObject(Class classOfUpdatedObject) throws DatabaseTasksExecutorException {
+  public void setClassOfUpdatedObject(Class<T> classOfUpdatedObject) throws DatabaseTasksExecutorException {
     try {
       this.classOfUpdatedObject = classOfUpdatedObject;
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("", e);
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of setting updated object's class",
+        exp
+      );
     }
   }
 
@@ -118,8 +142,11 @@ public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
   public T getResult() throws DatabaseTasksExecutorException {
     try {
       return resultOfUpdating;
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("", e);
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of getting updating's result",
+        exp
+      );
     }
   }
 }

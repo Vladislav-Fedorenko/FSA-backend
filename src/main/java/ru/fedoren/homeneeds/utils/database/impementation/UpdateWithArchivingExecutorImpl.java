@@ -1,21 +1,21 @@
 package ru.fedoren.homeneeds.utils.database.impementation;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import java.sql.Timestamp;
 import java.time.Instant;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import ru.fedoren.homeneeds.utils.archive.ArchivedException;
 import ru.fedoren.homeneeds.utils.database.exeception.DatabaseTasksExecutorException;
-import ru.fedoren.homeneeds.utils.entities.IArchiveEntityException;
-import ru.fedoren.homeneeds.utils.timestamp.TimestampException;
 import ru.fedoren.homeneeds.utils.database.extending.UpdateExecutor;
 import ru.fedoren.homeneeds.utils.entities.IArchiveEntity;
+import ru.fedoren.homeneeds.utils.entities.IArchiveEntityException;
 import ru.fedoren.homeneeds.utils.entities.IEntity;
+import ru.fedoren.homeneeds.utils.timestamp.TimestampException;
 
 
 public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchiveEntity>
-  implements UpdateExecutor<T, U> {
+    implements UpdateExecutor<T, U> {
 
   private SessionFactory sessionFactory;
   private Session session;
@@ -45,20 +45,20 @@ public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
       session.evict(updatedObject);
 
       resultOfUpdating = getUpdatedObjectFromDatabase();
-    } catch (IArchiveEntityException iArchiveEntityException) {
+    } catch (IArchiveEntityException exp) {
       throw new DatabaseTasksExecutorException(
         "Failed updating. Errors of setting values of fields from entity to archive_entity",
-        iArchiveEntityException
+        exp
       );
-    } catch (ArchivedException archivedException) {
+    } catch (ArchivedException exp) {
       throw new DatabaseTasksExecutorException(
         "Failed updating. Errors of setting timestamp of creating to archive_entity",
-        archivedException
+        exp
       );
-    } catch (TimestampException timestampException) {
+    } catch (TimestampException exp) {
       throw new DatabaseTasksExecutorException(
         "Failed updating. Errors of setting reason of archiving to archive_entity",
-        timestampException
+        exp
       );
     } finally {
       session.close();
@@ -74,9 +74,10 @@ public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
   }
 
   private void prepareObjectToArchive(final T objectFromDatabase, final Timestamp timestamp)
-    throws IArchiveEntityException, TimestampException, ArchivedException, DatabaseTasksExecutorException {
+      throws IArchiveEntityException, TimestampException,
+      ArchivedException, DatabaseTasksExecutorException {
 
-    if(objectFromDatabase == null) {
+    if (objectFromDatabase == null) {
       throw new DatabaseTasksExecutorException(
         "Failed updating. Object with id = " + idOfUpdatedObject + " not found in database"
       );
@@ -86,7 +87,8 @@ public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
     archivedObject.setArchivingReason("update");
   }
 
-  private void prepareObjectToUpdate(final T updatedObject, final Timestamp timestamp) throws TimestampException {
+  private void prepareObjectToUpdate(final T updatedObject, final Timestamp timestamp)
+      throws TimestampException {
     updatedObject.setUpdatedAt(timestamp);
   }
 
@@ -127,7 +129,8 @@ public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
   }
 
   @Override
-  public void setClassOfUpdatedObject(Class<T> classOfUpdatedObject) throws DatabaseTasksExecutorException {
+  public void setClassOfUpdatedObject(Class<T> classOfUpdatedObject)
+      throws DatabaseTasksExecutorException {
     try {
       this.classOfUpdatedObject = classOfUpdatedObject;
     } catch (Exception exp) {

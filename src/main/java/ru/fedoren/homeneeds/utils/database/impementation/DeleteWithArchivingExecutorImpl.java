@@ -43,20 +43,20 @@ public class DeleteWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
       session.evict(deletedObject);
 
       resultOfDeleting = isDeleted();
-    } catch (IArchiveEntityException iArchiveEntityException) {
+    } catch (IArchiveEntityException exp) {
       throw new DatabaseTasksExecutorException(
         "Failed deleting. Errors of setting values of fields from entity to archive_entity",
-        iArchiveEntityException
+        exp
       );
-    } catch (TimestampException timestampException) {
+    } catch (TimestampException exp) {
       throw new DatabaseTasksExecutorException(
         "Failed deleting. Errors of setting timestamp of creating to archive_entity",
-        timestampException
+        exp
       );
-    } catch (ArchivedException archivedException) {
+    } catch (ArchivedException exp) {
       throw new DatabaseTasksExecutorException(
         "Failed deleting. Errors of setting reason of archiving to archive_entity",
-        archivedException
+        exp
       );
     } finally {
       session.close();
@@ -93,27 +93,39 @@ public class DeleteWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
   public void setId(final Long id) throws DatabaseTasksExecutorException {
     try {
       this.idOfDeletedObject = id;
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("Failed of setting deleted object's id", e);
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of setting deleted object's id",
+        exp
+      );
     }
   }
 
   @Override
-  public void setArchivedObject(final U archivedObject) throws DatabaseTasksExecutorException {
+  public void setArchivedObject(final U archivedObject)
+      throws DatabaseTasksExecutorException {
+
     try {
       this.archivedObject = archivedObject;
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("Failed of setting archived object", e);
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of setting archived object",
+        exp
+      );
     }
   }
 
   @Override
   public void setClassOfDeletedObject(final Class<T> classOfDeletedObject)
       throws DatabaseTasksExecutorException {
+
     try {
       this.classOfDeletedObject = classOfDeletedObject;
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("Failed of setting deleted object's class", e);
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of setting deleted object's class",
+        exp
+      );
     }
   }
 
@@ -121,8 +133,11 @@ public class DeleteWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
   public boolean getResult() throws DatabaseTasksExecutorException {
     try {
       return resultOfDeleting;
-    } catch (Exception e) {
-      throw new DatabaseTasksExecutorException("Failed of getting deleting's result", e);
+    } catch (Exception exp) {
+      throw new DatabaseTasksExecutorException(
+        "Failed of getting deleting's result",
+        exp
+      );
     }
   }
 }

@@ -5,6 +5,9 @@ import ru.fedoren.homeneeds.utils.database.exeception.DatabaseTasksExecutorExcep
 
 public interface SelectByIdExecutor<T> extends DatabaseTasksExecutor {
 
-  void setId(final Long id) throws DatabaseTasksExecutorException;
-  T getResult() throws DatabaseTasksExecutorException;
+  void setId(final Long id)
+      throws DatabaseTasksExecutorException;
+
+  T getResult()
+      throws DatabaseTasksExecutorException;
 }

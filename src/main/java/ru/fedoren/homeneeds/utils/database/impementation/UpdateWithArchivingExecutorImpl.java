@@ -37,7 +37,9 @@ public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
       session.beginTransaction();
 
       Timestamp timestamp = getTimestamp();
-      prepareObjectToArchive(getUpdatedObjectFromDatabase(), timestamp);
+      T objectFromDatabase = getUpdatedObjectFromDatabase();
+      checkTimestampOfCreatingInUpdatedObject(objectFromDatabase);
+      prepareObjectToArchive(objectFromDatabase, timestamp);
       session.save(archivedObject);
       prepareObjectToUpdate(updatedObject, timestamp);
       session.merge(updatedObject);
@@ -85,6 +87,16 @@ public class UpdateWithArchivingExecutorImpl<T extends IEntity, U extends IArchi
     archivedObject.setValuesOfFieldsFromEntity(objectFromDatabase);
     archivedObject.setCreatedAt(timestamp);
     archivedObject.setArchivingReason("update");
+  }
+
+  private void checkTimestampOfCreatingInUpdatedObject(final T objectFromDatabase)
+      throws DatabaseTasksExecutorException, TimestampException {
+    if (!objectFromDatabase.getCreatedAt().equals(updatedObject.getCreatedAt())) {
+      throw new DatabaseTasksExecutorException(
+        "Failed updating. Timestamp of creating in existing object "
+          + "not equals timestamp of creating in updated object"
+      );
+    }
   }
 
   private void prepareObjectToUpdate(final T updatedObject, final Timestamp timestamp)

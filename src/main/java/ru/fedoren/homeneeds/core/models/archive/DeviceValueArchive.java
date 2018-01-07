@@ -76,7 +76,6 @@ public class DeviceValueArchive implements IArchiveEntity {
     this.archivingReason = archivingReason;
   }
 
-  @Override
   public String getArchivingReason() throws ArchivedException {
     return archivingReason;
   }

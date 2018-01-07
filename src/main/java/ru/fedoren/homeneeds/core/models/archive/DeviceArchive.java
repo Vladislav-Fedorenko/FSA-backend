@@ -71,7 +71,6 @@ public class DeviceArchive implements IArchiveEntity {
     }
   }
 
-  @Override
   public String getArchivingReason() throws ArchivedException {
     try {
       return archivingReason;

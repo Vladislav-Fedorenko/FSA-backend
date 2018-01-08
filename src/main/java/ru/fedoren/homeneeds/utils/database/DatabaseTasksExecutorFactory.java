@@ -10,6 +10,7 @@ import ru.fedoren.homeneeds.utils.database.extending.SelectExecutor;
 import ru.fedoren.homeneeds.utils.database.extending.UpdateExecutor;
 import ru.fedoren.homeneeds.utils.database.impementation.DeleteWithArchivingExecutorImpl;
 import ru.fedoren.homeneeds.utils.database.impementation.InsertExecutorImpl;
+import ru.fedoren.homeneeds.utils.database.impementation.SelectByIdExecutorImpl;
 import ru.fedoren.homeneeds.utils.database.impementation.UpdateWithArchivingExecutorImpl;
 
 public class DatabaseTasksExecutorFactory {
@@ -26,7 +27,7 @@ public class DatabaseTasksExecutorFactory {
   }
 
   public SelectByIdExecutor getSelectByIdExecutor() {
-    return selectByIdExecutor;
+    return new SelectByIdExecutorImpl<>(sessionFactory);
   }
 
   public SelectExecutor getSelectExecutor() {

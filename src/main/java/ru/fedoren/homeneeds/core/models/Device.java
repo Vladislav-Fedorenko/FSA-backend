@@ -3,9 +3,9 @@ package ru.fedoren.homeneeds.core.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
+import javax.persistence.*;
 
 import ru.fedoren.homeneeds.utils.entities.IEntity;
 
@@ -25,16 +25,21 @@ public class Device implements IEntity {
   @Column(name = "updated_at")
   private Timestamp updatedAt;
 
-  @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "device", fetch = FetchType.EAGER)
   private Set<HomeDevice> homeDevices;
 
+  /**
+   * Device constructor.
+   * @param name of device
+   * @param createdAt timestamp of creating
+   * @param updatedAt timestamp of updating
+   */
   @JsonCreator
   public Device(@JsonProperty("name") String name,
                 @JsonProperty("createdAt") String createdAt,
                 @JsonProperty("updatedAt") String updatedAt) {
     this.name = name;
-//    this.createdAt = Timestamp.from(Instant.parse(createdAt));
-    if(createdAt != null && updatedAt != null) {
+    if (createdAt != null && updatedAt != null) {
       this.createdAt = new Timestamp(Long.valueOf(createdAt));
       this.updatedAt = new Timestamp(Long.valueOf(updatedAt));
     }
@@ -67,14 +72,18 @@ public class Device implements IEntity {
   }
 
   @Override
-  public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+  public void setCreatedAt(Timestamp createdAt) {
+    this.createdAt = createdAt;
+  }
 
   public Timestamp getCreatedAt() {
     return createdAt;
   }
 
   @Override
-  public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
+  public void setUpdatedAt(Timestamp updatedAt) {
+    this.updatedAt = updatedAt;
+  }
 
   public Timestamp getUpdatedAt() {
     return updatedAt;

@@ -1,23 +1,31 @@
 package ru.fedoren.homeneeds.core.repositories.device;
 
+import java.util.List;
+
 import ru.fedoren.homeneeds.core.models.Device;
 import ru.fedoren.homeneeds.core.models.archive.DeviceArchive;
 import ru.fedoren.homeneeds.utils.database.DatabaseTasksExecutorFactory;
 import ru.fedoren.homeneeds.utils.database.exeception.DatabaseTasksExecutorException;
 import ru.fedoren.homeneeds.utils.database.extending.DeleteExecutor;
 import ru.fedoren.homeneeds.utils.database.extending.InsertExecutor;
+import ru.fedoren.homeneeds.utils.database.extending.SelectByIdExecutor;
 import ru.fedoren.homeneeds.utils.database.extending.UpdateExecutor;
 
-import java.util.List;
 
 public class DatabaseDeviceRepository implements DeviceRepository {
   private InsertExecutor<Device> insertExecutor;
+  private SelectByIdExecutor<Device> selectByIdExecutor;
   private UpdateExecutor<Device, DeviceArchive> updateExecutor;
   private DeleteExecutor<Device, DeviceArchive> deleteExecutor;
 
+  /**
+   * .
+   * @param factory of executors
+   */
   @SuppressWarnings("unchecked")
   public DatabaseDeviceRepository(final DatabaseTasksExecutorFactory factory) {
     this.insertExecutor = factory.getInsertExecutor();
+    this.selectByIdExecutor = factory.getSelectByIdExecutor();
     this.updateExecutor = factory.getUpdateExecutor();
     this.deleteExecutor = factory.getDeleteExecutor();
   }
@@ -51,6 +59,14 @@ public class DatabaseDeviceRepository implements DeviceRepository {
 
   @Override
   public Device getDeviceById(Long deviceId) {
+    try {
+      selectByIdExecutor.setId(deviceId);
+      selectByIdExecutor.setClassOfSelectedObject(Device.class);
+      selectByIdExecutor.execute();
+      return selectByIdExecutor.getResult();
+    } catch (DatabaseTasksExecutorException e) {
+      e.printStackTrace();
+    }
     return null;
   }
 

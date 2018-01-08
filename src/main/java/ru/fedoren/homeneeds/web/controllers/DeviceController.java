@@ -40,6 +40,21 @@ public class DeviceController {
   }
 
   /**
+   * Get device by id.
+   * @param id od device
+   * @return found device
+   */
+  @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+  @ResponseBody
+  public ResponseEntity<Device> getById(@PathVariable String id) {
+    Device foundDevice = deviceRepository.getDeviceById(Long.valueOf(id));
+    URI location = UriComponentsBuilder.fromPath("/device/")
+        .path(String.valueOf(foundDevice.getId()))
+        .build().toUri();
+    return ResponseEntity.created(location).body(foundDevice);
+  }
+
+  /**
    * Update device.
    * @param newDevice object for updating
    * @return updated object

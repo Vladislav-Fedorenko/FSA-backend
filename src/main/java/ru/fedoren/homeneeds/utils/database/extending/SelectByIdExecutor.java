@@ -8,6 +8,9 @@ public interface SelectByIdExecutor<T> extends DatabaseTasksExecutor {
   void setId(final Long id)
       throws DatabaseTasksExecutorException;
 
+  void setClassOfSelectedObject(final Class<T> classOfSelectedObject)
+      throws DatabaseTasksExecutorException;
+
   T getResult()
       throws DatabaseTasksExecutorException;
 }

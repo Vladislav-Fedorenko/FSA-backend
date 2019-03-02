@@ -1,12 +1,11 @@
-package topLevelDomain.secondLevelDomain.homeNeeds;
+package tld.sld.userApi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Application {
-
+public class UserApiApplication {
     public static void main(String[] args) {
-      SpringApplication.run(Application.class, args);
+      SpringApplication.run(UserApiApplication.class, args);
     }
 }

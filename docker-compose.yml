@@ -1,0 +1,22 @@
+version: '2'
+services:
+  user-api.local:
+    image: openjdk:8-jre-alpine
+    volumes:
+      - ./backend/user-api/target/user-api-1.0-SNAPSHOT.jar:/app.jar
+    command: java -XX:MaxRAM=300M -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar /app.jar --spring.profiles.active=docker --server.port=9000
+    ports:
+      - "9010:9000"
+      - "5005:5005"
+    environment:
+        METERING_DEVICES_CONTROL_JDBC_DATABASE_URL: jdbc:postgresql://database-metering-devices-control.local:5432/metering_devices_control
+        METERING_DEVICES_CONTROL_JDBC_DATABASE_USERNAME: postgres
+        METERING_DEVICES_CONTROL_JDBC_DATABASE_PASSWORD:
+    depends_on:
+      - database-metering-devices-control.local
+
+
+  database-metering-devices-control.local:
+    image: postgres:9.5
+    ports:
+      - "54320:5432"

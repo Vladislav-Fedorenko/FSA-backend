@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    metering-devices-control:
+      url: ${METERING_DEVICES_CONTROL_JDBC_DATABASE_URL}
+      username: ${METERING_DEVICES_CONTROL_JDBC_DATABASE_USERNAME}
+      password: ${METERING_DEVICES_CONTROL_JDBC_DATABASE_PASSWORD}
+      driver-class-name: org.postgresql.Driver

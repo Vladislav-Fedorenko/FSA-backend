@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    metering-devices-control:
+      url: jdbc:postgresql://localhost:54320/metering_devices_control
+      username: postgres
+      password: postgres
+      driver-class-name: org.postgresql.Driver

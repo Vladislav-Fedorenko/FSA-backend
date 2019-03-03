@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class DataSourceConfig {
     @Bean
     @Qualifier("dataSource")
-    @ConfigurationProperties(prefix = "spring.datasource")
+    @ConfigurationProperties(prefix = "spring.datasource.metering-devices-control")
     @FlywayDataSource
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();

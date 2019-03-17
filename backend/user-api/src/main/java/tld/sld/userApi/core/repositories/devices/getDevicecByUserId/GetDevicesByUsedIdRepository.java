@@ -5,5 +5,5 @@ import tld.sld.userApi.core.entities.DeviceEntity;
 import java.util.List;
 
 public interface GetDevicesByUsedIdRepository {
-    List<DeviceEntity> get(String userId);
+    List<DeviceEntity> get(String userId) throws RepositoryException;
 }

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import tld.sld.userApi.core.entities.DeviceEntity;
+import tld.sld.userApi.core.repositories.RepositoryException;
 
 import java.io.IOException;
 import java.util.List;

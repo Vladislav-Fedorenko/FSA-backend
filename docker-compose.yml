@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    ports:
+      - "54320:5432"
+    environment:
+      POSTGRES_DB: photo_gallery_db
+      POSTGRES_USER: photo_gallery_user
+      POSTGRES_PASSWORD: photo_gallery_passwd
+
